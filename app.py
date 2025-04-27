@@ -41,10 +41,8 @@ if "index" in st.session_state:
     query = st.text_input("Ask a question about the PDF:")
     if query:
         results = search_index(query, st.session_state.chunks, st.session_state.index, st.session_state.model)
-        
-        context = " ".join(results)[:2000]  # small limit, to fit into model input
+        context = " ".join(results)[:2000]
         answer = generate_answer(context, query)
-
         st.write("### 📢 Answer:")
         st.write(answer)
 

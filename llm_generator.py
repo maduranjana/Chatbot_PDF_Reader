@@ -1,10 +1,20 @@
-from transformers import pipeline
+import requests
 
-# Load the model
-qa_pipeline = pipeline("text2text-generation", model="google/flan-t5-small")
+# Set your HuggingFace Inference API URL
+API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
 
-# Function to generate answer
+# Your HuggingFace token
+headers = {"Authorization": "Bearer ......"}
+
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
+
 def generate_answer(context, question):
     prompt = f"Context: {context}\n\nQuestion: {question}\nAnswer:"
-    result = qa_pipeline(prompt, max_length=200)
-    return result[0]['generated_text']
+    output = query({"inputs": prompt})
+    
+    try:
+        return output[0]["generated_text"]
+    except Exception as e:
+        return "Sorry, I couldn't generate an answer."
